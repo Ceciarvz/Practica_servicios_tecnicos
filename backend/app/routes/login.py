@@ -3,11 +3,13 @@ from app.config.conexion import conectar
 login_bp = Blueprint("login", __name__)
 @login_bp.route("/api/login", methods=["POST"])
 def login():
-    datos = request.get_json(silent=True)
-    if not isinstance(datos, dict):
+    datos = request.get_json()
+    username = datos.get("username")
+    password = datos.get("password")
+    if not username or not password:
         return jsonify({
             "success": False,
-            "message": "El cuerpo de la petición debe ser un objeto JSON"
+            "message": "Username y contraseña son obligatorios"
         }), 400
 
     username = datos.get("username")
