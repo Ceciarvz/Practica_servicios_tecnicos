@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
+import Tecnicos from "./pages/Tecnicos";
 import RutaProtegida from "./components/RutaProtegida";
 
 function App() {
@@ -17,10 +18,10 @@ return (
         }
     />
     <Route
-        path="/clientes"
+        path="/tecnicos"
         element={
         <RutaProtegida>
-            <Clientes />
+            <Tecnicos />
         </RutaProtegida>
         }
     />
@@ -29,5 +30,8 @@ return (
 );
 }
 
+
 export default App;
+
+
 
