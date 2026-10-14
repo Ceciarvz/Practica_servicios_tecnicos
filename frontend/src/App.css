@@ -4,7 +4,7 @@ box-sizing: border-box;
 body {
 margin: 0;
 font-family: Arial, sans-serif;
-background: #ecf3f4;
+background: #ffd1e7a4;
 }
 .contenedor {
 min-height: 100vh;
@@ -15,7 +15,7 @@ align-items: center;
 .login {
 width: 360px;
 padding: 30px;
-background: rgb(254, 239, 255);
+background: rgba(165, 75, 123, 0.525);
 border-radius: 10px;
 box-shadow: 0 4px 15px rgba(255, 51, 201, 0.664);
 }
@@ -41,7 +41,7 @@ font-weight: bold;
 .login input {
 width: 100%;
 padding: 10px;
-border: 1px solid #d43bb8;
+border: 1px solid #d78eca;
 border-radius: 5px;
 }
 .login button {
@@ -62,7 +62,7 @@ font-weight: bold;
 color: green;
 }
 .error {
-color: red;
+color: rgb(81, 36, 36);
 }
 .dashboard {
 min-height: 100vh;

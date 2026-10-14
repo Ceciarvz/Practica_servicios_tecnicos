@@ -4,7 +4,7 @@ import { obtenerClientes, crearCliente, actualizarCliente, eliminarCliente } fro
 
 export default function Clientes() {
 const [clientes, setClientes] = useState([]);
-const [username, setUsername] = useState("");
+const [nombre, setNombre] = useState("");
 const [editandoId, setEditandoId] = useState(null);
 const [mensaje, setMensaje] = useState("");
 
@@ -22,12 +22,19 @@ useEffect(() => {
 
 const guardar = async (e) => {
     e.preventDefault();
+    if (!nombre.trim()) {
+    setMensaje("El nombre del cliente es obligatorio.");
+    return;
+    }
+
+
     const r = editandoId
-    ? await actualizarCliente(editandoId, { username })
-    : await crearCliente({ username });
+    ? await actualizarCliente(editandoId, { nombre })
+    : await crearCliente({ nombre });
+    
     setMensaje(r.datos.message || "Solicitud procesada");
     if (r.ok) {
-    setUsername("");
+    setNombre("");
     setEditandoId(null);
     await cargarClientes();
     }
@@ -36,13 +43,13 @@ const guardar = async (e) => {
 
 const prepararEdicion = (cliente) => {
     setEditandoId(cliente.id);
-    setUsername(cliente.username);
+    setNombre(cliente.nombre);
 };
 
 
 const cancelarEdicion = () => {
     setEditandoId(null);
-    setUsername("");
+    setNombre("");
 };
 
 
@@ -55,9 +62,8 @@ const borrar = async (id) => {
 
 
 return (
-    <div style={{ padding: "20px" }}>
+    <div className= "dashboard">
     <h2>Clientes</h2>
-    
     {mensaje && <p style={{ color: "red", fontWeight: "bold" }}>{mensaje}</p>}
 
 
@@ -66,8 +72,8 @@ return (
         <input
         type="text"
         placeholder="Nombre del cliente"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
         required
         />
         <button type="submit" style={{ marginLeft: "10px" }}>
@@ -85,7 +91,7 @@ return (
     <ul>
         {clientes.map((cliente) => (
         <li key={cliente.id} style={{ marginBottom: "10px" }}>
-            <span>{cliente.id} - {cliente.username}</span>
+            <span>{cliente.id} - {cliente.nombre}</span>
             <button onClick={() => prepararEdicion(cliente)} style={{ marginLeft: "10px" }}>
             Editar
             </button>

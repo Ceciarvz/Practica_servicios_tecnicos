@@ -22,9 +22,14 @@ return (
     <nav>
         <Link to="/clientes">Clientes</Link>
         <Link to="/tecnicos">Técnicos</Link>
+        <Link to="/servicios">Servicios</Link>
     </nav>
     <button onClick={salir}>Cerrar sesión</button>
     </div>
 );
 }
+
+
 export default Dashboard;
+
+

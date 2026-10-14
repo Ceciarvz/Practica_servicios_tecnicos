@@ -111,5 +111,22 @@ def eliminar_tecnico(tecnico_id):
         if cursor: 
             cursor.close()
         conexion.close()
+@tecnicos_bp.route("/api/tecnicos/catalogo", methods=["GET"])
+def catalogo_tecnicos():
+    conexion = conectar()
+    if conexion is None:
+        return jsonify({"success": False, "message": "Sin conexión a BD"}), 500
+    cursor = None
+    try:
+        cursor = conexion.cursor(dictionary=True)
+        cursor.execute("SELECT id, nombre FROM tecnico ORDER BY nombre")
+        return jsonify({"success": True, "tecnicos": cursor.fetchall()}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        conexion.close()
+
+
 
 

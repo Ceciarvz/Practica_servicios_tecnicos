@@ -115,5 +115,26 @@ def eliminar_cliente(cliente_id):
         if cursor:
             cursor.close()
         conexion.close()
+@clientes_bp.route("/api/clientes/catalogo", methods=["GET"])
+def catalogo_clientes():
+    conexion = conectar()
+    if conexion is None:
+        return jsonify({"success": False, "message": "Sin conexión a BD"}), 500
+    cursor = None
+    try:
+        cursor = conexion.cursor(dictionary=True)
+        cursor.execute("SELECT id, nombre FROM cliente ORDER BY nombre")
+        return jsonify({"success": True, "clientes": cursor.fetchall()}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        conexion.close()
+
+
+
+
+
+
 
 
