@@ -4,14 +4,14 @@ import { obtenerClientes, crearCliente, actualizarCliente, eliminarCliente } fro
 
 export default function Clientes() {
 const [clientes, setClientes] = useState([]);
-const [nombre, setNombre] = useState("");
+const [username, setUsername] = useState("");
 const [editandoId, setEditandoId] = useState(null);
 const [mensaje, setMensaje] = useState("");
 
 
 const cargarClientes = async () => {
     const data = await obtenerClientes();
-    setClientes(data);
+    setClientes(Array.isArray(data) ? data : data.clientes || []);
 };
 
 
@@ -22,19 +22,16 @@ useEffect(() => {
 
 const guardar = async (e) => {
     e.preventDefault();
-    if (!nombre.trim()) {
-    setMensaje("El nombre del cliente es obligatorio.");
+    if (!username.trim()) {
+    setMensaje("El nombre de usuario es obligatorio.");
     return;
     }
-
-
     const r = editandoId
-    ? await actualizarCliente(editandoId, { nombre })
-    : await crearCliente({ nombre });
-    
-    setMensaje(r.datos.message || "Solicitud procesada");
-    if (r.ok) {
-    setNombre("");
+    ? await actualizarCliente(editandoId, { username })
+    : await crearCliente({ username });
+    setMensaje(r.datos?.message || r.message || "Solicitud procesada");
+    if (r.ok || r.success !== false) {
+    setUsername("");
     setEditandoId(null);
     await cargarClientes();
     }
@@ -43,37 +40,34 @@ const guardar = async (e) => {
 
 const prepararEdicion = (cliente) => {
     setEditandoId(cliente.id);
-    setNombre(cliente.nombre);
+    setUsername(cliente.username || "");
 };
 
 
 const cancelarEdicion = () => {
     setEditandoId(null);
-    setNombre("");
+    setUsername("");
 };
 
 
 const borrar = async (id) => {
     if (!window.confirm("¿Estás seguro de eliminar este cliente?")) return;
     const r = await eliminarCliente(id);
-    setMensaje(r.datos.message || "Solicitud procesada");
-    if (r.ok) await cargarClientes();
+    setMensaje(r.datos?.message || r.message || "Solicitud procesada");
+    if (r.ok || r.success !== false) await cargarClientes();
 };
 
 
 return (
-    <div className= "dashboard">
+    <div className="dashboard">
     <h2>Clientes</h2>
     {mensaje && <p style={{ color: "red", fontWeight: "bold" }}>{mensaje}</p>}
-
-
-      {/* Formulario */}
     <form onSubmit={guardar} style={{ marginBottom: "20px" }}>
         <input
         type="text"
         placeholder="Nombre del cliente"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         required
         />
         <button type="submit" style={{ marginLeft: "10px" }}>
@@ -85,13 +79,10 @@ return (
         </button>
         )}
     </form>
-
-
-      {/* Lista / Tabla de Clientes */}
     <ul>
-        {clientes.map((cliente) => (
+        {Array.isArray(clientes) && clientes.map((cliente) => (
         <li key={cliente.id} style={{ marginBottom: "10px" }}>
-            <span>{cliente.id} - {cliente.nombre}</span>
+            <span>{cliente.id} - {cliente.username}</span>
             <button onClick={() => prepararEdicion(cliente)} style={{ marginLeft: "10px" }}>
             Editar
             </button>

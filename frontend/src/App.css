@@ -4,7 +4,7 @@ box-sizing: border-box;
 body {
 margin: 0;
 font-family: Arial, sans-serif;
-background: #ffd1e7a4;
+background: #ead9e2a4;
 }
 .contenedor {
 min-height: 100vh;
@@ -15,9 +15,9 @@ align-items: center;
 .login {
 width: 360px;
 padding: 30px;
-background: rgba(165, 75, 123, 0.525);
+background: rgba(207, 246, 251, 0.525);
 border-radius: 10px;
-box-shadow: 0 4px 15px rgba(255, 51, 201, 0.664);
+box-shadow: 0 4px 15px rgba(77, 99, 139, 0.664);
 }
 .login h1,
 .login h2 {
@@ -25,10 +25,12 @@ text-align: center;
 }
 
 .login h1 {
+font-size: 50px;       /* Asegúrate de darle un tamaño claro */
+line-height: 1.2;      /* Esto evita que los renglones se encimen */
 margin-bottom: 5px;
 }
 .login h2 {
-margin-top: 0;
+  margin-top: 10px;      /* Dales un pequeño respiro entre el h1 y el h2 */
 font-size: 18px;
 font-weight: normal;
 }
@@ -41,7 +43,7 @@ font-weight: bold;
 .login input {
 width: 100%;
 padding: 10px;
-border: 1px solid #d78eca;
+border: 1px solid #d3edec;
 border-radius: 5px;
 }
 .login button {
@@ -62,7 +64,7 @@ font-weight: bold;
 color: green;
 }
 .error {
-color: rgb(81, 36, 36);
+color: rgb(167, 114, 114);
 }
 .dashboard {
 min-height: 100vh;

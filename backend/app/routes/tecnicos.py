@@ -19,7 +19,7 @@ def obtener_tecnicos():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
     finally:
-        if cursor: 
+        if cursor:
             cursor.close()
         conexion.close()
 
@@ -34,7 +34,7 @@ def crear_tecnico():
     especialidad = datos.get("especialidad")
     if not nombre or not especialidad:
         return jsonify({"success": False, "message": "Nombre y especialidad son obligatorios"}), 400
-    
+
     conexion = conectar()
     if conexion is None:
         return jsonify({"success": False, "message": "Sin conexión a BD"}), 500
@@ -51,7 +51,7 @@ def crear_tecnico():
         conexion.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
     finally:
-        if cursor: 
+        if cursor:
             cursor.close()
         conexion.close()
 
@@ -85,7 +85,7 @@ def actualizar_tecnico(tecnico_id):
         conexion.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
     finally:
-        if cursor: 
+        if cursor:
             cursor.close()
         conexion.close()
 
@@ -108,9 +108,10 @@ def eliminar_tecnico(tecnico_id):
         conexion.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
     finally:
-        if cursor: 
+        if cursor:
             cursor.close()
         conexion.close()
+# 11. GET – catálogo de técnicos para el select de servicios
 @tecnicos_bp.route("/api/tecnicos/catalogo", methods=["GET"])
 def catalogo_tecnicos():
     conexion = conectar()
@@ -124,9 +125,8 @@ def catalogo_tecnicos():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
     finally:
-        if cursor: cursor.close()
+        if cursor:
+            cursor.close()
         conexion.close()
-
-
 
 
