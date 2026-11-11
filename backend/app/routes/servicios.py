@@ -68,38 +68,100 @@ def crear_servicio():
 @servicios_bp.route("/api/servicios/<int:servicio_id>", methods=["PUT"])
 def actualizar_servicio(servicio_id):
     datos = request.get_json(silent=True)
+
     if not isinstance(datos, dict):
         return jsonify({"success": False, "message": "JSON válido requerido"}), 400
+
     cliente_id = datos.get("cliente_id")
     tecnico_id = datos.get("tecnico_id")
     descripcion = datos.get("descripcion")
     estado = datos.get("estado")
     fecha = datos.get("fecha")
+
     if not cliente_id or not tecnico_id or not descripcion:
-        return jsonify({"success": False, "message": "Campos obligatorios faltantes"}), 400
+        return jsonify({
+            "success": False,
+            "message": "Campos obligatorios faltantes"
+        }), 400
+
     conexion = conectar()
+
     if conexion is None:
-        return jsonify({"success": False, "message": "Sin conexión a BD"}), 500
+        return jsonify({
+            "success": False,
+            "message": "Sin conexión a BD"
+        }), 500
+
     cursor = None
+
     try:
         cursor = conexion.cursor()
-        cursor.execute(
-            """UPDATE servicio
-            SET cliente_id=%s, tecnico_id=%s, descripcion=%s, estado=%s, fecha=%s
-            WHERE id=%s""",
-            (cliente_id, tecnico_id, descripcion.strip(), estado, fecha, servicio_id)
-        )
-        conexion.commit()
+
+        # Si llega una fecha, actualizarla.
+        # Si llega vacía o no se envía, conservar la fecha guardada.
+        if fecha:
+            cursor.execute(
+                """UPDATE servicio
+                SET cliente_id=%s, tecnico_id=%s, descripcion=%s,
+                    estado=%s, fecha=%s
+                WHERE id=%s""",
+                (
+                    cliente_id,
+                    tecnico_id,
+                    descripcion.strip(),
+                    estado,
+                    fecha,
+                    servicio_id
+                )
+            )
+        else:
+            cursor.execute(
+                """UPDATE servicio
+                SET cliente_id=%s, tecnico_id=%s, descripcion=%s,
+                    estado=%s
+                WHERE id=%s""",
+                (
+                    cliente_id,
+                    tecnico_id,
+                    descripcion.strip(),
+                    estado,
+                    servicio_id
+                )
+            )
+
         if cursor.rowcount == 0:
-            return jsonify({"success": False, "message": "Servicio no encontrado"}), 404
-        return jsonify({"success": True, "message": "Servicio actualizado"}), 200
+            # Comprobar si existe el servicio aunque sus datos no hayan cambiado.
+            cursor.execute(
+                "SELECT id FROM servicio WHERE id=%s",
+                (servicio_id,)
+            )
+
+            if cursor.fetchone() is None:
+                conexion.rollback()
+                return jsonify({
+                    "success": False,
+                    "message": "Servicio no encontrado"
+                }), 404
+
+        conexion.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Servicio actualizado"
+        }), 200
+
     except Exception as e:
         conexion.rollback()
-        return jsonify({"success": False, "message": str(e)}), 500
-    finally:
-        if cursor: cursor.close()
-        conexion.close()
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
 
+    finally:
+        if cursor:
+            cursor.close()
+        conexion.close()
+        
 
 @servicios_bp.route("/api/servicios/<int:servicio_id>", methods=["DELETE"])
 def eliminar_servicio(servicio_id):
