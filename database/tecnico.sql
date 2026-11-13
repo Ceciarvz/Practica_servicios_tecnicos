@@ -38,7 +38,7 @@ INSERT INTO tecnico (id, nombre, especialidad) VALUES
 (4, 'Cecia', 'Soporte Tecnico');
 
 INSERT INTO servicio (id, cliente_id, tecnico_id, descripcion, estado, fecha) VALUES 
-(5, 1, 3, 'prueba', 'Terminado', ''2026-11-10'');
+(5, 1, 3, 'prueba', 'Terminado', '2026-11-10');
 
 INSERT INTO usuario (id, username, password) VALUES 
 (1, 'admin', '12345'),
